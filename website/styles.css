@@ -184,6 +184,8 @@ html[dir="ltr"] .steps3 .field::before { left: 14px; }
 ol.install { margin: 0 0 24px; padding: 0; list-style: none; counter-reset: i; display: grid; gap: 14px; }
 ol.install > li { counter-increment: i; position: relative; padding-inline-start: 46px; min-height: 30px; }
 ol.install > li::before { content: counter(i); position: absolute; inset-inline-start: 0; top: 0; width: 30px; height: 30px; border-radius: 9px; background: var(--mod); color: #F4F5F2; font-weight: 700; font-size: 14px; display: grid; place-items: center; box-shadow: 0 2px 0 #0d0f12; }
+.dmg-shot { margin: 12px 0 4px; }
+.dmg-shot img { display: block; width: min(100%, 480px); height: auto; border-radius: 12px; box-shadow: 0 18px 40px -20px rgb(0 0 0 / .5); }
 .mock-dialog { margin: 14px 0 4px; max-width: 300px; border-radius: 14px; background: #ECECEC; color: #1d1d1f; padding: 16px 18px 14px; display: grid; gap: 6px; justify-items: center; text-align: center; font: 13px/1.4 -apple-system, system-ui, sans-serif; box-shadow: 0 10px 30px rgb(0 0 0 / .18); }
 .mock-dialog b { font-size: 13.5px; }
 .mock-dialog span { color: #555; }
