@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="he" dir="rtl" data-lang="he">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oops: הקלדתם בשפה הלא נכונה? Alt+O וזה מתוקן</title>
+  <meta name="description" content="Oops מקליד מחדש טקסט שנכתב באנגלית במקום בעברית (וגם הפוך) בלחיצה על Alt+O. חינם, קוד פתוח, ל־Mac ול־Windows.">
+  <meta name="theme-color" content="#E9EBE6">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nadavm-ux.github.io/oops/">
+  <meta property="og:title" content="Oops: akuo ← שלום בלחיצה אחת">
+  <meta property="og:description" content="הקלדתם בשפה הלא נכונה? לוחצים Alt+O וזה מתוקן. חינם ל־Mac ול־Windows.">
+  <meta property="og:image" content="https://nadavm-ux.github.io/oops/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="he_IL">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="fonts/logo.css">
+  <link rel="stylesheet" href="keycap.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#download"><span class="he">דלגו להורדה</span><span class="en">Skip to download</span></a>
+
+  <header class="site-head wrap">
+    <a class="brand" href="#top" aria-label="Oops">
+      <span class="key" data-active="heb" aria-hidden="true"><span class="lg l">A</span><span class="lg h">ש</span></span>
+      <span>Oops</span>
+    </a>
+    <nav aria-label="Main">
+      <a href="#how"><span class="he">איך זה עובד</span><span class="en">How it works</span></a>
+      <a href="#download"><span class="he">הורדה</span><span class="en">Download</span></a>
+      <a href="#faq"><span class="he">שאלות</span><span class="en">FAQ</span></a>
+      <button class="langswitch" type="button" data-toggle-lang><span class="he">English</span><span class="en">עברית</span></button>
+      <a class="gh" href="https://github.com/NadavM-ux/oops" aria-label="GitHub">
+        <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- HERO: the product's moment, played with real keycaps -->
+    <section class="hero wrap">
+      <p class="eyebrow"><span class="he">ל־Mac ול־Windows · חינם · קוד פתוח</span><span class="en">For Mac &amp; Windows · Free · Open source</span></p>
+      <div class="stage">
+        <button class="keyword-btn" type="button" id="heroReplay" aria-describedby="heroHint">
+          <span class="keyword" id="heroWord"></span>
+        </button>
+        <div class="stage-ctrl">
+          <span id="heroHint" class="hint"><span class="he">לחצו על המקשים כדי לראות שוב</span><span class="en">Click the keys to replay</span></span>
+          <button class="linkbtn" type="button" id="heroNext"><span class="he">דוגמה אחרת</span><span class="en">Another example</span></button>
+        </div>
+      </div>
+      <h1>
+        <span class="he">הקלדתם בשפה הלא נכונה?<br>לוחצים <span class="hk" data-hk></span> וזה מתוקן.</span>
+        <span class="en">Typed in the wrong language?<br>Press <span class="hk" data-hk></span> and it's fixed.</span>
+      </h1>
+      <p class="lead">
+        <span class="he">Oops מקליד מחדש טקסט שנכתב באנגלית במקום בעברית, וגם הפוך. עובד בכל אפליקציה, בלי למחוק ובלי להקליד שוב.</span>
+        <span class="en">Oops retypes text you typed in English instead of Hebrew, and the other way around. Works in every app. No deleting, no retyping.</span>
+      </p>
+      <div class="cta-row" data-os-cta>
+        <a class="btn big" data-dl="mac" href="https://github.com/NadavM-ux/oops/releases/latest/download/Oops-mac.dmg">
+          <svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18"><path fill="currentColor" d="M10 13.5 4.8 8.3l1.4-1.4 2.8 2.8V2h2v7.7l2.8-2.8 1.4 1.4L10 13.5zM3 16h14v2H3z"/></svg>
+          <span class="he">הורדה ל־Mac</span><span class="en">Download for Mac</span>
+        </a>
+        <a class="btn big" data-dl="win" href="https://github.com/NadavM-ux/oops/releases/latest/download/Oops-windows-setup.exe">
+          <svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18"><path fill="currentColor" d="M10 13.5 4.8 8.3l1.4-1.4 2.8 2.8V2h2v7.7l2.8-2.8 1.4 1.4L10 13.5zM3 16h14v2H3z"/></svg>
+          <span class="he">הורדה ל־Windows</span><span class="en">Download for Windows</span>
+        </a>
+        <a class="alt-link" data-alt="win" href="#download" data-pick="win"><span class="he">מחשב Windows? הורדה כאן</span><span class="en">On Windows? Get it here</span></a>
+        <a class="alt-link" data-alt="mac" href="#download" data-pick="mac"><span class="he">מחשב Mac? הורדה כאן</span><span class="en">On a Mac? Get it here</span></a>
+      </div>
+      <p class="meta" data-meta></p>
+
+      <div class="phone-note" hidden data-phone>
+        <p><span class="he">Oops עובד על מחשבים (Mac ו־Windows). שלחו לעצמכם את הקישור ותתקינו מהמחשב.</span><span class="en">Oops runs on computers (Mac and Windows). Send yourself the link and install it there.</span></p>
+        <button class="btn" type="button" data-share><span class="he">שליחת הקישור לעצמי</span><span class="en">Send me the link</span></button>
+        <span class="copied" hidden data-shared><span class="he">הקישור הועתק ✓</span><span class="en">Link copied ✓</span></span>
+      </div>
+    </section>
+
+    <!-- TRY: the same conversion, in the browser -->
+    <section class="try wrap" id="try" aria-labelledby="try-title">
+      <div class="try-card">
+        <div class="try-copy">
+          <h2 id="try-title"><span class="he">נסו כאן, בלי להתקין</span><span class="en">Try it here, no install</span></h2>
+          <p><span class="he">הקלידו באנגלית כאילו המקלדת על עברית (למשל <b class="ltr">akuo nv akunl?</b>) ולחצו <span class="hk" data-hk></span> או על הכפתור.</span><span class="en">Type in English as if your keyboard were set to Hebrew (for example <b class="ltr">akuo nv akunl?</b>), then press <span class="hk" data-hk></span> or the button.</span></p>
+        </div>
+        <div class="try-box">
+          <textarea id="tryText" rows="2" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-label="Try Oops" placeholder="akuo nv akunl?"></textarea>
+          <div class="try-actions">
+            <button class="btn" type="button" id="tryFix"><span class="he">תקנו</span><span class="en">Fix it</span></button>
+            <span class="try-msg" id="tryMsg" role="status"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW: a real three-step sequence -->
+    <section class="how wrap" id="how" aria-labelledby="how-title">
+      <h2 id="how-title"><span class="he">איך זה עובד</span><span class="en">How it works</span></h2>
+      <ol class="steps3">
+        <li>
+          <div class="field" dir="ltr"><span class="typed">akuo nv akunl?</span><i class="caret"></i></div>
+          <h3><span class="he">מקלידים</span><span class="en">Type</span></h3>
+          <p><span class="he">שכחתם להחליף שפה. קורה לכולם.</span><span class="en">You forgot to switch languages. Happens to everyone.</span></p>
+        </li>
+        <li>
+          <div class="field keys" dir="ltr"><span class="hk big" data-hk></span></div>
+          <h3><span class="he">לוחצים על הקיצור</span><span class="en">Press the shortcut</span></h3>
+          <p><span class="he">בכל אפליקציה: וואטסאפ, ג׳ימייל, וורד, סלאק, כל אתר.</span><span class="en">In any app: WhatsApp, Gmail, Word, Slack, any website.</span></p>
+        </li>
+        <li>
+          <div class="field" dir="rtl"><span class="fixed">שלום מה שלומך?</span><i class="caret"></i></div>
+          <h3><span class="he">ממשיכים לכתוב</span><span class="en">Keep typing</span></h3>
+          <p><span class="he">הטקסט מתוקן, והמקלדת כבר עברה לשפה הנכונה.</span><span class="en">The text is fixed, and the keyboard has already switched language.</span></p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- DETAILS -->
+    <section class="details wrap" aria-labelledby="details-title">
+      <h2 id="details-title"><span class="he">הפרטים הקטנים</span><span class="en">The small details</span></h2>
+      <div class="grid">
+        <div class="item">
+          <h3><span class="he">התחרטתם? עוד לחיצה מבטלת</span><span class="en">Changed your mind? Press again</span></h3>
+          <p><span class="he">לחיצה נוספת מיד אחרי התיקון מחזירה את הטקסט בדיוק כמו שהיה.</span><span class="en">Pressing again right after a fix puts the original text back, exactly as it was.</span></p>
+        </div>
+        <div class="item">
+          <h3><span class="he">עובד בשני הכיוונים</span><span class="en">Works both ways</span></h3>
+          <p><span class="he">גם <b>ןמנםס</b> הופך ל־<b class="ltr">inbox</b>.</span><span class="en"><b>ןמנםס</b> becomes <b>inbox</b> too.</span></p>
+        </div>
+        <div class="item">
+          <h3><span class="he">מתקן רק את מה שצריך</span><span class="en">Fixes only what's wrong</span></h3>
+          <p><span class="he">רק החלק שהוקלד בשפה הלא נכונה משתנה. רוצים לתקן משהו מסוים? מסמנים <mark>בדיוק אותו</mark> ולוחצים.</span><span class="en">Only the part typed in the wrong language changes. Want something specific fixed? Select <mark>exactly that</mark> and press.</span></p>
+        </div>
+        <div class="item">
+          <h3><span class="he">פרטי, באמת</span><span class="en">Private, really</span></h3>
+          <p><span class="he">בלי AI ובלי שרת. Oops זוכר רק את מה שהקלדתם הרגע, בזיכרון בלבד, ושוכח בכל Enter או לחיצת עכבר.</span><span class="en">No AI, no server. Oops only remembers what you just typed, in memory, and forgets it on every Enter or click.</span></p>
+        </div>
+        <div class="item">
+          <h3><span class="he">הקיצור שלכם</span><span class="en">Your shortcut</span></h3>
+          <p><span class="he">לא מסתדרים עם <span class="hk" data-hk></span>? בוחרים כל צירוף אחר בהגדרות.</span><span class="en">Not a fan of <span class="hk" data-hk></span>? Pick any other combination in settings.</span></p>
+        </div>
+        <div class="item">
+          <h3><span class="he">קטן ושקט</span><span class="en">Small and quiet</span></h3>
+          <p><span class="he">כמה מגה בודדים. יושב בשורת התפריטים או ליד השעון ולא מפריע.</span><span class="en">A few megabytes. Sits in the menu bar or next to the clock and stays out of your way.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOWNLOAD -->
+    <section class="download wrap" id="download" aria-labelledby="dl-title">
+      <h2 id="dl-title"><span class="he">הורדה והתקנה</span><span class="en">Download &amp; install</span></h2>
+      <div class="tabs" role="tablist" aria-label="Operating system">
+        <button role="tab" id="tab-mac" aria-controls="panel-mac" aria-selected="true" data-tab="mac" type="button">Mac</button>
+        <button role="tab" id="tab-win" aria-controls="panel-win" aria-selected="false" data-tab="win" type="button">Windows</button>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-mac" aria-labelledby="tab-mac">
+        <div class="panel-head">
+          <a class="btn big" data-dl="mac" href="https://github.com/NadavM-ux/oops/releases/latest/download/Oops-mac.dmg">
+            <svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18"><path fill="currentColor" d="M10 13.5 4.8 8.3l1.4-1.4 2.8 2.8V2h2v7.7l2.8-2.8 1.4 1.4L10 13.5zM3 16h14v2H3z"/></svg>
+            <span class="he">הורדה ל־Mac</span><span class="en">Download for Mac</span>
+          </a>
+          <p class="req"><span class="he">macOS 11 ומעלה · Apple Silicon ו־Intel</span><span class="en">macOS 11 or later · Apple Silicon &amp; Intel</span> <span data-size="mac"></span></p>
+        </div>
+        <ol class="install">
+          <li><span class="he">פותחים את הקובץ שירד וגוררים את Oops לתיקיית Applications.</span><span class="en">Open the downloaded file and drag Oops into Applications.</span></li>
+          <li>
+            <span class="he">פותחים את Oops. בפעם הראשונה macOS יגיד שהוא לא יכול לאמת אותו. זה צפוי: Oops חינמי ולא משלם לאפל על חתימה. לוחצים <b>סיום</b>.</span>
+            <span class="en">Open Oops. The first time, macOS says it can't verify it. That's expected: Oops is free and doesn't pay Apple for a signature. Click <b>Done</b>.</span>
+            <figure class="mock-dialog" aria-hidden="true" dir="ltr">
+              <img src="assets/icon-128.png" alt="" width="44" height="44">
+              <b>“Oops” Not Opened</b>
+              <span>Apple could not verify “Oops” is free of malware…</span>
+              <span class="mock-buttons"><i>Move to Trash</i><i class="primary">Done</i></span>
+            </figure>
+          </li>
+          <li><span class="he">נכנסים ל<b>הגדרות המערכת ← פרטיות ואבטחה</b>, גוללים למטה ולוחצים <b>לפתוח בכל זאת</b> (Open Anyway), ומאשרים עם הסיסמה.</span><span class="en">Go to <b>System Settings → Privacy &amp; Security</b>, scroll down, click <b>Open Anyway</b> and confirm with your password.</span></li>
+          <li><span class="he">Oops נפתח ומדריך אתכם לתת הרשאת נגישות. דקה, וזהו.</span><span class="en">Oops opens and walks you through the Accessibility permission. One minute and you're done.</span></li>
+        </ol>
+        <div class="oneliner">
+          <h3><span class="he">מעדיפים פקודה אחת? בלי אזהרות</span><span class="en">Prefer one command? No warnings</span></h3>
+          <p><span class="he">פתחו את Terminal (⌘ רווח ואז Terminal), הדביקו ולחצו Enter:</span><span class="en">Open Terminal (⌘ Space, then Terminal), paste this and press Enter:</span></p>
+          <div class="code"><code dir="ltr">curl -fsSL https://nadavm-ux.github.io/oops/install.sh | bash</code><button class="copy" type="button" data-copy><span class="he">העתקה</span><span class="en">Copy</span></button></div>
+          <p class="small"><span class="he">הפקודה מורידה את הגרסה האחרונה מ־GitHub, מתקינה אותה ב־Applications ופותחת. אפשר <a href="install.sh">לקרוא אותה</a> קודם.</span><span class="en">It downloads the latest version from GitHub, installs it in Applications and opens it. You can <a href="install.sh">read it</a> first.</span></p>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-win" aria-labelledby="tab-win" hidden>
+        <div class="panel-head">
+          <a class="btn big" data-dl="win" href="https://github.com/NadavM-ux/oops/releases/latest/download/Oops-windows-setup.exe">
+            <svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18"><path fill="currentColor" d="M10 13.5 4.8 8.3l1.4-1.4 2.8 2.8V2h2v7.7l2.8-2.8 1.4 1.4L10 13.5zM3 16h14v2H3z"/></svg>
+            <span class="he">הורדה ל־Windows</span><span class="en">Download for Windows</span>
+          </a>
+          <p class="req"><span class="he">Windows 10 ו־11 · בלי הרשאות מנהל</span><span class="en">Windows 10 &amp; 11 · No admin rights needed</span> <span data-size="win"></span></p>
+        </div>
+        <ol class="install">
+          <li><span class="he">מריצים את הקובץ שירד. אם הדפדפן שואל, בוחרים <b>שמירה</b> (Keep).</span><span class="en">Run the downloaded file. If your browser asks, choose <b>Keep</b>.</span></li>
+          <li>
+            <span class="he">אם מופיע <b>Windows protected your PC</b>, לוחצים <b>More info</b> ואז <b>Run anyway</b>. זה קורה כי Oops חדש ולא חתום, וזה תקין.</span>
+            <span class="en">If you see <b>Windows protected your PC</b>, click <b>More info</b>, then <b>Run anyway</b>. That happens because Oops is new and unsigned.</span>
+            <figure class="mock-dialog win" aria-hidden="true" dir="ltr">
+              <b>Windows protected your PC</b>
+              <span>Microsoft Defender SmartScreen prevented an unrecognized app from starting… <u>More info</u></span>
+              <span class="mock-buttons"><i class="primary">Run anyway</i><i>Don't run</i></span>
+            </figure>
+          </li>
+          <li><span class="he">ההתקנה לוקחת שניות. Oops נפתח ומראה איך משתמשים.</span><span class="en">Setup takes seconds. Oops opens and shows you how to use it.</span></li>
+        </ol>
+        <div class="oneliner">
+          <h3><span class="he">מעדיפים פקודה אחת? בלי אזהרות</span><span class="en">Prefer one command? No warnings</span></h3>
+          <p><span class="he">פתחו PowerShell (מקש Windows ואז PowerShell), הדביקו ולחצו Enter:</span><span class="en">Open PowerShell (Windows key, then PowerShell), paste this and press Enter:</span></p>
+          <div class="code"><code dir="ltr">irm https://nadavm-ux.github.io/oops/install.ps1 | iex</code><button class="copy" type="button" data-copy><span class="he">העתקה</span><span class="en">Copy</span></button></div>
+          <p class="small"><span class="he">הפקודה מורידה את הגרסה האחרונה מ־GitHub ומתקינה אותה. אפשר <a href="install.ps1">לקרוא אותה</a> קודם.</span><span class="en">It downloads the latest version from GitHub and installs it. You can <a href="install.ps1">read it</a> first.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq wrap" id="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title"><span class="he">שאלות</span><span class="en">Questions</span></h2>
+      <details>
+        <summary><span class="he">זה בטוח? זה לא כמו Keylogger?</span><span class="en">Is it safe? Isn't this like a keylogger?</span></summary>
+        <p><span class="he">כדי לדעת מה לתקן, Oops חייב לראות מה מקלידים, כמו כל כלי מהסוג הזה. אבל הוא זוכר רק את 300 התווים האחרונים, רק בזיכרון, ושוכח אותם בכל Enter, לחיצת עכבר או מעבר בין חלונות. אין לו שרת ואין לו לאן לשלוח. הבקשה היחידה שהוא שולח לאינטרנט היא בדיקה אם יצאה גרסה חדשה, ואפשר לכבות אותה. כל הקוד פתוח ב־<a href="https://github.com/NadavM-ux/oops">GitHub</a>.</span><span class="en">To know what to fix, Oops has to see what you type, like any tool of this kind. But it only remembers the last 300 characters, only in memory, and forgets them on every Enter, click or window switch. There's no server and nowhere to send anything. The only request it makes is checking for a new version, and you can turn that off. All the code is on <a href="https://github.com/NadavM-ux/oops">GitHub</a>.</span></p>
+      </details>
+      <details>
+        <summary><span class="he">למה macOS מבקש הרשאת נגישות?</span><span class="en">Why does macOS ask for Accessibility access?</span></summary>
+        <p><span class="he">זו ההרשאה שמאפשרת לאפליקציה לראות הקלדות ולהקליד בשמכם. בלעדיה אי אפשר לתקן טקסט באפליקציות אחרות. אפשר לבטל אותה מתי שרוצים בהגדרות המערכת ← פרטיות ואבטחה ← נגישות.</span><span class="en">It's the permission that lets an app see keystrokes and type for you. Without it, fixing text in other apps isn't possible. You can revoke it any time in System Settings → Privacy &amp; Security → Accessibility.</span></p>
+      </details>
+      <details>
+        <summary><span class="he">למה יש אזהרה בהתקנה?</span><span class="en">Why is there a warning when installing?</span></summary>
+        <p><span class="he">אפל ומיקרוסופט גובות תשלום שנתי על חתימה דיגיטלית. Oops חינמי, אז המערכת לא מכירה אותו ומבקשת אישור. הקוד פתוח לכל מי שרוצה לבדוק, וההורדה מגיעה ישר מ־GitHub.</span><span class="en">Apple and Microsoft charge a yearly fee for code signing. Oops is free, so the system doesn't recognize it and asks you to confirm. The code is open for anyone to check, and downloads come straight from GitHub.</span></p>
+      </details>
+      <details>
+        <summary><span class="he">רק חלק מהמשפט יצא בשפה הלא נכונה. מה עושים?</span><span class="en">Only part of the sentence came out wrong. Now what?</span></summary>
+        <p><span class="he">Oops מתקן רק את הסוף שהוקלד בשפה הלא נכונה. אם צריך לתקן משהו אחר, מסמנים בדיוק אותו ולוחצים <span class="hk" data-hk></span>.</span><span class="en">Oops only fixes the end that was typed in the wrong language. To fix something else, select exactly that and press <span class="hk" data-hk></span>.</span></p>
+      </details>
+      <details>
+        <summary><span class="he">איך משנים את הקיצור?</span><span class="en">How do I change the shortcut?</span></summary>
+        <p><span class="he">לוחצים על האייקון של Oops (בשורת התפריטים ב־Mac, ליד השעון ב־Windows) ← הגדרות ← שינוי, ומקישים את הצירוף החדש.</span><span class="en">Click the Oops icon (menu bar on Mac, next to the clock on Windows) → Settings → Change, then press the new combination.</span></p>
+      </details>
+      <details>
+        <summary><span class="he">איפה זה עובד?</span><span class="en">Where does it work?</span></summary>
+        <p><span class="he">כמעט בכל מקום שמקלידים בו: דפדפנים, וואטסאפ, Word, Outlook, Slack, Notion, VS Code. לא עובד בשדות סיסמה (בכוונה), ולא בחלונות שרצים כמנהל ב־Windows.</span><span class="en">Almost anywhere you type: browsers, WhatsApp, Word, Outlook, Slack, Notion, VS Code. Not in password fields (on purpose), and not in apps running as administrator on Windows.</span></p>
+      </details>
+      <details>
+        <summary><span class="he">איזו מקלדת עברית נתמכת?</span><span class="en">Which Hebrew keyboard layout is supported?</span></summary>
+        <p><span class="he">הפריסה הישראלית הסטנדרטית (SI-1452), זו שמגיעה עם Windows ועם Mac.</span><span class="en">The standard Israeli layout (SI-1452) that ships with Windows and Mac.</span></p>
+      </details>
+      <details>
+        <summary><span class="he">איך מסירים?</span><span class="en">How do I uninstall it?</span></summary>
+        <p><span class="he">ב־Mac: יוצאים מ־Oops (אייקון ← יציאה) ומוחקים אותו מ־Applications. ב־Windows: הגדרות ← אפליקציות ← Oops ← הסרה.</span><span class="en">Mac: quit Oops (icon → Quit) and delete it from Applications. Windows: Settings → Apps → Oops → Uninstall.</span></p>
+      </details>
+      <details>
+        <summary><span class="he">כמה זה עולה?</span><span class="en">How much does it cost?</span></summary>
+        <p><span class="he">כלום. חינם וקוד פתוח (רישיון MIT).</span><span class="en">Nothing. It's free and open source (MIT license).</span></p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="site-foot wrap">
+    <div class="by">
+      <span class="he">נבנה ע״י <a href="https://www.instagram.com/nadav.tech_/" class="ltr">@nadav.tech_</a>. עוד טיפים כאלה באינסטגרם.</span>
+      <span class="en">Made by <a href="https://www.instagram.com/nadav.tech_/">@nadav.tech_</a>. More tips like this on Instagram.</span>
+    </div>
+    <div class="links">
+      <a href="https://github.com/NadavM-ux/oops"><span class="he">הקוד ב־GitHub</span><span class="en">Code on GitHub</span></a>
+      <a href="https://github.com/NadavM-ux/oops/releases"><span class="he">כל הגרסאות</span><span class="en">All versions</span></a>
+      <span>MIT · 2026</span>
+    </div>
+  </footer>
+
+  <script src="keyword.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

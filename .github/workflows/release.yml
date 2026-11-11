@@ -1,0 +1,116 @@
+name: Release
+
+# Push a tag like v1.0.0 to build both installers and publish a GitHub release.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  mac:
+    name: Build macOS (universal)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+      - uses: Swatinem/rust-cache@v2
+      - name: Install Tauri CLI
+        working-directory: app
+        run: npm ci
+      - name: Build app + DMG
+        working-directory: app
+        run: npx tauri build --target universal-apple-darwin --bundles app,dmg
+      - name: Package
+        run: |
+          set -euo pipefail
+          B=target/universal-apple-darwin/release/bundle
+          mkdir -p dist
+          cp "$(ls $B/dmg/*.dmg | head -1)" dist/Oops-mac.dmg
+          ditto -c -k --keepParent "$B/macos/Oops.app" dist/Oops-mac.zip
+          codesign -dv "$B/macos/Oops.app" 2>&1 | grep -E "Identifier|Signature"
+          lipo -archs "$B/macos/Oops.app/Contents/MacOS/Oops"
+          ls -la dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac
+          path: dist/*
+
+  windows:
+    name: Build Windows (x64)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Unit tests
+        run: cargo test --workspace
+      - name: Install Tauri CLI
+        working-directory: app
+        run: npm ci
+      - name: Build installer
+        working-directory: app
+        run: npx tauri build --bundles nsis
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          $setup = Get-ChildItem target/release/bundle/nsis/*-setup.exe | Select-Object -First 1
+          Copy-Item $setup.FullName dist/Oops-windows-setup.exe
+          Get-ChildItem dist
+      - name: End-to-end test (type gibberish in Notepad, press Alt+O)
+        id: e2e
+        continue-on-error: true
+        shell: pwsh
+        run: ./scripts/windows-e2e.ps1 -Installer dist/Oops-windows-setup.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: dist/*
+
+  publish:
+    name: Publish release
+    needs: [mac, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          if [[ "$TAG" != v* ]]; then TAG="v$(jq -r .version app/src-tauri/tauri.conf.json)"; fi
+          cd dist && sha256sum Oops-* > SHA256SUMS.txt && cd ..
+          cat > notes.md <<NOTES
+          **Download:** [Mac](https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/Oops-mac.dmg) · [Windows](https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/Oops-windows-setup.exe) · Install guide: https://nadavm-ux.github.io/oops/#download
+
+          Typed in the wrong language? Press **Alt+O** (⌥O on Mac) and Oops retypes it in the right one (English ↔ Hebrew).
+
+          הקלדתם בשפה הלא נכונה? לוחצים **Alt+O** (‏⌥O ב־Mac) ו־Oops מקליד את זה מחדש בשפה הנכונה.
+
+          - \`Oops-mac.dmg\`: macOS 11+, Apple Silicon & Intel
+          - \`Oops-mac.zip\`: the same app, used by the one-line installer
+          - \`Oops-windows-setup.exe\`: Windows 10/11, no admin rights needed
+          - \`SHA256SUMS.txt\`: checksums
+          NOTES
+          sed -i 's/^          //' notes.md
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" dist/* --title "Oops ${TAG#v}" --notes-file notes.md
+          fi

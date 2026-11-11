@@ -1,0 +1,22 @@
+<!doctype html><meta charset="utf-8">
+<link rel="stylesheet" href="fonts/fonts.css"><link rel="stylesheet" href="fonts/logo.css">
+<style>
+html,body{margin:0;overflow:hidden}
+body{font-family:'IBM Plex Sans Hebrew'}
+.side{width:164px;height:314px;background:linear-gradient(#383D47,#1B1E24);color:#fff;position:relative}
+.side svg{position:absolute;left:37px;top:64px}
+.side .name{position:absolute;top:168px;width:100%;text-align:center;font-weight:700;font-size:28px;letter-spacing:-.01em}
+.side .tag{position:absolute;top:208px;width:100%;text-align:center;font-size:12px;color:#B9BEC6}
+.side .tag b{color:#FF7A64;font-weight:600}
+.head{width:150px;height:57px;background:#fff;position:relative}
+.head svg{position:absolute;right:10px;top:9px}
+.head .name{position:absolute;right:56px;top:13px;font-weight:700;font-size:22px;color:#15171C}
+</style>
+<div id="root"></div>
+<script>
+const key = (s) => `<svg width="${s}" height="${s}" viewBox="0 0 18 18"><rect x="1" y="1.2" width="16" height="15.8" rx="3.8" fill="#2B2F37"/><rect x="1" y="1.2" width="16" height="15.8" rx="3.8" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width=".4"/><rect x="2.5" y="2.4" width="13" height="11.1" rx="2.6" fill="#fff"/><text x="4.4" y="7.2" font-family="IBM Plex Sans Hebrew" font-weight="600" font-size="3.6" fill="#15171C">A</text><text x="13.6" y="12.2" text-anchor="end" font-family="Oops Logo" font-weight="800" font-size="7" fill="#E2412E">ש</text></svg>`;
+const which = new URLSearchParams(location.search).get("p");
+document.getElementById("root").innerHTML = which === "header"
+  ? `<div class="head">${key(38)}<div class="name">Oops</div></div>`
+  : `<div class="side">${key(90)}<div class="name">Oops</div><div class="tag" dir="rtl">akuo ← <b>שלום</b></div></div>`;
+</script>

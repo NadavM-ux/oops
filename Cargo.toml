@@ -1,0 +1,16 @@
+[workspace]
+resolver = "2"
+members = ["core", "app/src-tauri"]
+
+[workspace.package]
+version = "1.0.0"
+edition = "2021"
+license = "MIT"
+authors = ["nadav.tech_"]
+repository = "https://github.com/NadavM-ux/oops"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
