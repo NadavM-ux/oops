@@ -71,7 +71,7 @@ jobs:
       - name: End-to-end test (type gibberish in Notepad, press Alt+O)
         id: e2e
         continue-on-error: true
-        shell: pwsh
+        shell: powershell
         run: ./scripts/windows-e2e.ps1 -Installer dist/Oops-windows-setup.exe
       - uses: actions/upload-artifact@v4
         with:

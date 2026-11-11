@@ -1,7 +1,7 @@
 {
   "name": "oops-app",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Oops: fix text typed in the wrong keyboard language",
   "scripts": {
     "tauri": "tauri",

@@ -96,6 +96,7 @@ html[data-lang="he"] .en, html[data-lang="en"] .he { display: none !important; }
   box-shadow: 0 .14em 0 #0d0f12, inset 0 1px 0 rgb(255 255 255 / .12);
 }
 h1 .hk { vertical-align: .08em; }
+@media (prefers-color-scheme: dark) { .hk kbd { background: #4B515D; } }
 h1 .hk kbd { font-size: .62em; border-radius: .22em; box-shadow: 0 .1em 0 #0d0f12, 0 .16em .3em rgb(13 15 18 / .18), inset 0 1px 0 rgb(255 255 255 / .12); }
 
 /* ---------- hero ---------- */

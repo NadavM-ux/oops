@@ -1,12 +1,12 @@
-# End-to-end test on a real Windows desktop (runs in CI):
-#   1. type "akuo" in Notepad, press Alt+O          -> "שלום"  (fix what was just typed)
-#   2. press Alt+O again                             -> "akuo"  (undo)
-#   3. select all, press Alt+O                       -> "שלום"  (fix a selection, via the clipboard)
-# Notepad's text is read through UI Automation, so reading never sends keystrokes.
+# End-to-end test on a real Windows desktop (runs in CI with Windows PowerShell 5.1):
+#   1. type "akuo" in a text box, press Alt+O   -> "שלום"  (fix what was just typed)
+#   2. press Alt+O again                         -> "akuo"  (undo)
+#   3. select the text, press Alt+O              -> "שלום"  (fix a selection, via the clipboard)
+# The text box lives in this script's own window, so its text is read directly.
 param([Parameter(Mandatory)] [string] $Installer)
 $ErrorActionPreference = 'Stop'
 
-Add-Type -AssemblyName UIAutomationClient, UIAutomationTypes
+Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
@@ -18,6 +18,8 @@ public static class Kbd {
   struct INPUT { [FieldOffset(0)] public uint type; [FieldOffset(8)] public KEYBDINPUT ki; }
   [DllImport("user32.dll", SetLastError = true)] static extern uint SendInput(uint n, INPUT[] inputs, int size);
   [DllImport("user32.dll")] static extern uint MapVirtualKey(uint code, uint mapType);
+  [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hwnd);
+  [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
   public static void Key(ushort vk, bool up) {
     var input = new INPUT[1];
     input[0].type = 1;
@@ -25,34 +27,21 @@ public static class Kbd {
     input[0].ki.wScan = (ushort)MapVirtualKey(vk, 0);
     input[0].ki.dwFlags = up ? 2u : 0u;
     if (SendInput(1, input, Marshal.SizeOf(typeof(INPUT))) != 1) throw new Exception("SendInput failed: " + Marshal.GetLastWin32Error());
-    Thread.Sleep(30);
   }
-  public static void Tap(ushort vk) { Key(vk, false); Key(vk, true); }
-  public static void Chord(ushort mod, ushort vk) { Key(mod, false); Tap(vk); Key(mod, true); }
 }
 "@
 
-$A = [System.Windows.Automation.AutomationElement]
-function Read-Notepad([IntPtr] $hwnd) {
-  $root = $A::FromHandle($hwnd)
-  $isText = New-Object System.Windows.Automation.OrCondition(
-    (New-Object System.Windows.Automation.PropertyCondition($A::ControlTypeProperty, [System.Windows.Automation.ControlType]::Document)),
-    (New-Object System.Windows.Automation.PropertyCondition($A::ControlTypeProperty, [System.Windows.Automation.ControlType]::Edit)))
-  $box = $root.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $isText)
-  if ($null -eq $box) { throw 'Could not find Notepad''s text area' }
-  $pattern = $null
-  if ($box.TryGetCurrentPattern([System.Windows.Automation.TextPattern]::Pattern, [ref]$pattern)) {
-    return $pattern.DocumentRange.GetText(-1).Trim()
-  }
-  if ($box.TryGetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern, [ref]$pattern)) {
-    return $pattern.Current.Value.Trim()
-  }
-  throw 'Notepad''s text area exposes no readable text'
+# Keystrokes are processed by this thread's message loop, so keep it pumping while we wait.
+function Pump([int] $ms) {
+  $end = (Get-Date).AddMilliseconds($ms)
+  while ((Get-Date) -lt $end) { [System.Windows.Forms.Application]::DoEvents(); Start-Sleep -Milliseconds 10 }
 }
-function Expect([IntPtr] $hwnd, [string] $want, [string] $what) {
-  Start-Sleep -Seconds 2
-  $got = Read-Notepad $hwnd
-  Write-Host "   Notepad: '$got'"
+function Tap([int] $vk) { [Kbd]::Key($vk, $false); Pump 30; [Kbd]::Key($vk, $true); Pump 30 }
+function Chord([int] $mod, [int] $vk) { [Kbd]::Key($mod, $false); Pump 30; Tap $vk; [Kbd]::Key($mod, $true); Pump 30 }
+function Expect([string] $want, [string] $what) {
+  Pump 2500
+  $got = $script:box.Text.Trim()
+  Write-Host "   text box: '$got'"
   if ($got -ne $want) { throw "$what failed: expected '$want', got '$got'" }
   Write-Host "   OK: $what"
 }
@@ -70,38 +59,46 @@ New-Item -ItemType Directory -Force -Path $cfgDir | Out-Null
 $oops = Start-Process $exe -ArgumentList '--autostart' -PassThru
 Start-Sleep -Seconds 5
 if ($oops.HasExited) { throw "Oops exited right away (exit code $($oops.ExitCode))" }
+Write-Host '   Oops is running'
 
-Write-Host '3) Opening Notepad'
-Start-Process notepad | Out-Null
-$hwnd = [IntPtr]::Zero
-for ($i = 0; $i -lt 30 -and $hwnd -eq [IntPtr]::Zero; $i++) {
-  Start-Sleep -Milliseconds 500
-  $p = Get-Process -Name notepad -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne [IntPtr]::Zero } | Select-Object -First 1
-  if ($p) { $hwnd = $p.MainWindowHandle }
-}
-if ($hwnd -eq [IntPtr]::Zero) { throw 'Notepad window did not appear' }
-$wsh = New-Object -ComObject WScript.Shell
-$null = $wsh.AppActivate($p.Id)
-Start-Sleep -Seconds 1
+Write-Host '3) Opening a test window with a text box'
+$form = New-Object System.Windows.Forms.Form
+$form.Text = 'Oops end-to-end test'
+$form.Width = 640; $form.Height = 220
+$form.StartPosition = 'CenterScreen'
+$form.TopMost = $true
+$script:box = New-Object System.Windows.Forms.TextBox
+$box.Multiline = $true
+$box.Dock = 'Fill'
+$box.Font = New-Object System.Drawing.Font('Segoe UI', 18)
+$form.Controls.Add($box)
+$form.Show()
+$form.Activate()
+$null = [Kbd]::SetForegroundWindow($form.Handle)
+$box.Focus() | Out-Null
+Pump 1500
+if ([Kbd]::GetForegroundWindow() -ne $form.Handle) { Write-Host '   warning: test window is not in front' }
 
 $hebrew = -join [char[]](0x05E9, 0x05DC, 0x05D5, 0x05DD) # שלום
 
 Write-Host '4) Typing "akuo" and pressing Alt+O'
-foreach ($vk in 0x41, 0x4B, 0x55, 0x4F) { [Kbd]::Tap($vk) } # a k u o
-Start-Sleep -Milliseconds 300
-[Kbd]::Chord(0x12, 0x4F) # Alt+O
-Expect $hwnd $hebrew 'fix typed text'
+foreach ($vk in 0x41, 0x4B, 0x55, 0x4F) { Tap $vk } # a k u o
+Pump 300
+if ($box.Text -ne 'akuo') { throw "Typing didn't reach the text box (got '$($box.Text)')" }
+Chord 0x12 0x4F # Alt+O
+Expect $hebrew 'fix typed text'
 
 Write-Host '5) Pressing Alt+O again'
-[Kbd]::Chord(0x12, 0x4F)
-Expect $hwnd 'akuo' 'undo'
+Chord 0x12 0x4F
+Expect 'akuo' 'undo'
 
-Write-Host '6) Selecting everything and pressing Alt+O'
-[Kbd]::Chord(0x11, 0x41) # Ctrl+A
-Start-Sleep -Milliseconds 300
-[Kbd]::Chord(0x12, 0x4F)
-Expect $hwnd $hebrew 'fix selected text'
+Write-Host '6) Selecting the text and pressing Alt+O'
+Tap 0x23 # End: a caret move, so Oops forgets what was typed
+$box.SelectAll()
+Pump 300
+Chord 0x12 0x4F
+Expect $hebrew 'fix selected text'
 
 Write-Host 'PASS: typed fix, undo and selection fix all work on Windows.'
-Get-Process -Name notepad -ErrorAction SilentlyContinue | Stop-Process -Force
+$form.Close()
 Stop-Process -Id $oops.Id -Force -ErrorAction SilentlyContinue

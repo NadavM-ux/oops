@@ -1,0 +1,32 @@
+name: Windows end-to-end
+
+# Builds the installer and checks, on a real Windows desktop, that typing "akuo"
+# then pressing Alt+O produces "שלום", that a second press undoes it, and that a
+# selection is fixed too.
+on:
+  push:
+    branches: [main]
+    paths: ["core/**", "app/**", "scripts/windows-e2e.ps1", ".github/workflows/e2e-windows.yml"]
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Install Tauri CLI
+        working-directory: app
+        run: npm ci
+      - name: Build installer
+        working-directory: app
+        run: npx tauri build --bundles nsis
+      - name: End-to-end test
+        shell: powershell
+        run: |
+          $setup = Get-ChildItem target/release/bundle/nsis/*-setup.exe | Select-Object -First 1
+          ./scripts/windows-e2e.ps1 -Installer $setup.FullName
