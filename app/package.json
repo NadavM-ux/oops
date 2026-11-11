@@ -1,12 +1,12 @@
 {
   "name": "oops-app",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Oops: fix text typed in the wrong keyboard language",
   "scripts": {
     "tauri": "tauri",
     "dev": "tauri dev",
-    "build:mac": "tauri build --target universal-apple-darwin --bundles app,dmg",
+    "build:mac": "tauri build --target universal-apple-darwin --bundles app && ../scripts/make-dmg.sh ../target/universal-apple-darwin/release/bundle/macos/Oops.app ../target/Oops-mac.dmg",
     "build:win": "tauri build --bundles nsis"
   },
   "devDependencies": {

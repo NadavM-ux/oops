@@ -25,15 +25,15 @@ jobs:
       - name: Install Tauri CLI
         working-directory: app
         run: npm ci
-      - name: Build app + DMG
+      - name: Build app
         working-directory: app
-        run: npx tauri build --target universal-apple-darwin --bundles app,dmg
-      - name: Package
+        run: npx tauri build --target universal-apple-darwin --bundles app
+      - name: Package (DMG with the custom installer window, and a zip)
         run: |
           set -euo pipefail
           B=target/universal-apple-darwin/release/bundle
           mkdir -p dist
-          cp "$(ls $B/dmg/*.dmg | head -1)" dist/Oops-mac.dmg
+          ./scripts/make-dmg.sh "$B/macos/Oops.app" dist/Oops-mac.dmg
           ditto -c -k --keepParent "$B/macos/Oops.app" dist/Oops-mac.zip
           codesign -dv "$B/macos/Oops.app" 2>&1 | grep -E "Identifier|Signature"
           lipo -archs "$B/macos/Oops.app/Contents/MacOS/Oops"

@@ -56,7 +56,7 @@ Requirements: Rust (stable), Node 18+.
 cargo test --workspace            # conversion + engine tests
 cd app && npm install
 npx tauri dev                     # run with hot reload
-npm run build:mac                 # universal .app + .dmg (on a Mac)
+npm run build:mac                 # universal .app + Oops-mac.dmg with the custom installer window (on a Mac)
 npm run build:win                 # NSIS installer (on Windows)
 ```
 
