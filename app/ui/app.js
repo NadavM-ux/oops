@@ -16,6 +16,7 @@
   let step = 0; // onboarding step index
   let cleanup = []; // timers/listeners of the mounted view
   let recording = false;
+  let finishing = false; // onboarding just ended; the window is about to close
 
   // ---------- text ----------
   const lang = () => (S && S.settings.language === "en" ? "en" : "he");
@@ -249,8 +250,13 @@
         on(toggle, "click", () => toggle.setAttribute("aria-checked", toggle.getAttribute("aria-checked") !== "true"));
         on($("#finish"), "click", async () => {
           step = 0;
+          finishing = true;
           S = await invoke("finish_onboarding", { launchAtLogin: toggle.getAttribute("aria-checked") === "true" });
-          render();
+          // The window closes itself; show settings only if it is still open.
+          setTimeout(() => {
+            finishing = false;
+            render();
+          }, 1500);
         });
         $("#finish").focus();
       },
@@ -501,7 +507,7 @@
     render(true);
     listen("oops://state", (s) => {
       S = s;
-      render();
+      if (!finishing) render();
     });
     listen("oops://engine", onEngine);
     requestAnimationFrame(() => invoke("ui_ready"));

@@ -252,6 +252,14 @@ fn finish_onboarding(app: AppHandle, launch_at_login: bool) -> StateDto {
     });
     apply_autostart(&app, launch_at_login);
     broadcast(&app);
+    // Setup is over: Oops now lives in the menu bar / tray, so the window goes away.
+    let handle = app.clone();
+    std::thread::spawn(move || {
+        std::thread::sleep(Duration::from_millis(300));
+        if let Some(window) = handle.get_webview_window("main") {
+            let _ = window.close();
+        }
+    });
     snapshot(&app)
 }
 
